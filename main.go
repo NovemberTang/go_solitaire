@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"math/rand"
+)
 
 type Colour string
 
@@ -45,12 +48,26 @@ type card struct {
 	Suit  Suit
 }
 
-func main() {
-
-	myCard := card{
-		Value: Three,
-		Suit:  Spades,
+func createShuffledDeck() []card {
+	deck := []card{}
+	for i := Ace; i <= King; i++ {
+		deck = append(deck, card{Value: i, Suit: Hearts})
+		deck = append(deck, card{Value: i, Suit: Spades})
+		deck = append(deck, card{Value: i, Suit: Diamonds})
+		deck = append(deck, card{Value: i, Suit: Clubs})
 	}
 
-	fmt.Println(myCard)
+	for i := range deck {
+		j := rand.Intn(i + 1)
+		deck[i], deck[j] = deck[j], deck[i]
+	}
+
+	return deck
+}
+
+func main() {
+
+	deck := createShuffledDeck()
+
+	fmt.Println(deck[:3])
 }
