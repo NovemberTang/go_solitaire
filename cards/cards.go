@@ -39,18 +39,26 @@ const (
 	King
 )
 
+type Orientation string
+
+const (
+	FaceUp   Orientation = "up"
+	FaceDown Orientation = "down"
+)
+
 type Card struct {
-	Value Value
-	Suit  Suit
+	Value       Value
+	Suit        Suit
+	Orientation Orientation
 }
 
 func createShuffledDeck() []Card {
 	deck := []Card{}
 	for i := Ace; i <= King; i++ {
-		deck = append(deck, Card{Value: i, Suit: Hearts})
-		deck = append(deck, Card{Value: i, Suit: Spades})
-		deck = append(deck, Card{Value: i, Suit: Diamonds})
-		deck = append(deck, Card{Value: i, Suit: Clubs})
+		deck = append(deck, Card{Value: i, Suit: Hearts, Orientation: FaceDown})
+		deck = append(deck, Card{Value: i, Suit: Spades, Orientation: FaceDown})
+		deck = append(deck, Card{Value: i, Suit: Diamonds, Orientation: FaceDown})
+		deck = append(deck, Card{Value: i, Suit: Clubs, Orientation: FaceDown})
 	}
 
 	for i := range deck {

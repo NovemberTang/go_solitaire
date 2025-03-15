@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-type Stack struct { //todo make generic
+type Stack struct {
 	card     Card
 	nextCard *Stack
 }
@@ -15,11 +15,13 @@ type SuitStack struct {
 	size      int
 }
 
-func addToStack(s *SuitStack, card Card) (*SuitStack, error) {
-	s.StackHead = &Stack{card: card, nextCard: s.StackHead}
-	s.size++
-	fmt.Println("Card pushed to stack")
-	return s, nil
+func (s *Stack) Push(card Card) (*Stack, error) { //TODO test
+	if card.Orientation == FaceDown && s.card.Orientation == FaceUp {
+		return s, fmt.Errorf("cannot place a face down card on top of a face up card")
+	}
+
+	newHead := &Stack{card: card, nextCard: s}
+	return newHead, nil
 }
 
 func (s *SuitStack) Push(card Card) (*SuitStack, error) {
@@ -43,13 +45,14 @@ func (s *SuitStack) Push(card Card) (*SuitStack, error) {
 	if invalidNextCardValue {
 		return s, fmt.Errorf("cannot place a %d value card on top of a %d value card", card.Value, s.StackHead.card.Value)
 	}
-
-	addToStack(s, card)
+	card.Orientation = FaceUp
+	s.StackHead, _ = s.StackHead.Push(card) // this will never error as card is always FaceUp
+	s.size++
 	fmt.Println(s.StackHead.card)
 	return s, nil
 }
 
-type Foundation struct {
+type Foundation struct { //Tableau?
 	Hearts   SuitStack
 	Spades   SuitStack
 	Diamonds SuitStack
